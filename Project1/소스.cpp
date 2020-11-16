@@ -10,6 +10,15 @@ constexpr auto RIGHT = 3;
 constexpr auto LEFT = 4;
 constexpr auto SPACE = 0;
 
+class Monster {
+public:
+	int HP;
+	int AP;
+	int Xpos;
+	int Ypos;
+	void Move(int* mx, int* my, int* x, int* y);
+};
+
 void LaunchManager();
 int Menu();
 void gotoxy(int, int);
@@ -18,8 +27,8 @@ void cursor(int);
 
 void GameManager();
 void Stage_1();
-void Move(int*,int*,int,int);
-void MapDraw_1(int*,int*);
+void Move(int*, int*, int, int);
+void MapDraw_1(int*, int*, int*, int*);
 char temp[20][56];
 char map_1[20][56] = {
 	{"11111111111111111111111111111111111111111111111111"},
@@ -36,7 +45,7 @@ char map_1[20][56] = {
 	{"10000000000000000000000000000000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
+	{"1000000000000000000000000000m000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000g01"},
@@ -49,7 +58,7 @@ char map_1[20][56] = {
 //void Battle();//몬스터,플레이어 데이터를 가져와서 진행
 
 
-int main(){
+int main() {
 
 	LaunchManager();
 	GameManager();
@@ -57,7 +66,7 @@ int main(){
 	return 0;
 }
 
-void LaunchManager(){
+void LaunchManager() {
 	system("mode con cols=70 lines=30 | title 제목");//최대범위 가로100 세로30
 	cursor(0);
 	Menu();
@@ -70,7 +79,7 @@ void GameManager() {
 
 
 
-void gotoxy(int x, int y){
+void gotoxy(int x, int y) {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD pos;
 	pos.X = x;
@@ -94,9 +103,9 @@ int Menu() {
 	int x = 30, y = 15;
 	gotoxy(x - 2, y);
 	cout << "> 게임 시작";
-	gotoxy(x, y+1);
+	gotoxy(x, y + 1);
 	cout << "기록 보기";
-	gotoxy(x, y+2);
+	gotoxy(x, y + 2);
 	cout << "게임 종료";
 	gotoxy(x - 20, y + 4);
 	cout << "w,s를 통해 상하 이동을 하고, 스페이스바로 선택합니다!!\n";
@@ -133,7 +142,7 @@ int Menu() {
 	}
 }
 
-int keycontrol(){
+int keycontrol() {
 	char key = _getch();
 
 	if (key == 'w' || key == 'W') {
@@ -163,13 +172,14 @@ int keycontrol(){
 		system("cls");
 		Menu();
 	}
-	
+
 }*/
 
 
 void Stage_1() {
-	int x, y;
+	int x, y, mx, my;
 	int on = 1;
+	Monster monster_1;
 
 	gotoxy(0, 21);
 	cout << "게임을 시작합니다!\n";
@@ -177,30 +187,35 @@ void Stage_1() {
 	cout << "!는 몬스터가 있는 위치입니다." << "$는 아이템의 위치입니다.\n";
 	cout << "목표지점인 G까지 이동하면 스테이지를 클리어합니다!\n";
 
-	MapDraw_1(&x, &y);
+	MapDraw_1(&x, &y, &mx, &my);
 
 	while (on) {
 		int n = keycontrol();
 		switch (n) {
-		case UP:{
+		case UP: {
 			Move(&x, &y, 0, -1);
+			monster_1.Move(&mx, &my, &x, &y);
 			break; }
-		case DOWN:{
+		case DOWN: {
 			Move(&x, &y, 0, 1);
+			monster_1.Move(&mx, &my, &x, &y);
 			break; }
-		case RIGHT:{
+		case RIGHT: {
 			Move(&x, &y, 1, 0);
+			monster_1.Move(&mx, &my, &x, &y);
 			break; }
-		case LEFT:{
+		case LEFT: {
 			Move(&x, &y, -1, 0);
+			monster_1.Move(&mx, &my, &x, &y);
 			break; }
-		case SPACE: 
+		case SPACE:
 			on = 0;
 		}
 	}
 }
-void MapDraw_1(int* x, int* y) {
+void MapDraw_1(int* x, int* y, int* mx, int* my) {
 	int i, j;
+	int a, b;
 	for (i = 0; i < 20; i++) {
 		for (j = 0; j < 56; j++) {
 			if (map_1[i][j] == '0') {
@@ -221,13 +236,19 @@ void MapDraw_1(int* x, int* y) {
 				gotoxy(j, i);
 				cout << "G";
 			}
-			else if (map_1[i][j] == 'm') {//몬스터
-				gotoxy(j, i);
-				cout << "!";
-			}
 			else if (map_1[i][j] == 'i') {//아이템
 				gotoxy(j, i);
 				cout << "$";
+			}
+		}
+	}
+	for (a = 0; a < 20; a++) {
+		for (b = 0; b < 56; b++) {
+			if (map_1[a][b] == 'm') {//몬스터
+				gotoxy(b, a);
+				cout << "!";
+				*mx = b;
+				*my = a;
 			}
 		}
 	}
@@ -242,4 +263,63 @@ void Move(int* x, int* y, int px, int py) {
 
 	*x += px;
 	*y += py;
+}
+
+void Monster::Move(int* mx, int* my, int* x, int* y) {
+	gotoxy(*mx, *my);
+	cout << " ";
+	if (*mx > * x) {
+		if (*my > * y) {
+			gotoxy(*mx - 1, *my - 1);
+			cout << "M";
+			*mx -= 1;
+			*my -= 1;
+		}
+		else if (*my = *y) {
+			gotoxy(*mx - 1, *my);
+			cout << "M";
+			*mx -= 1;
+		}
+		else {
+			gotoxy(*mx - 1, *my + 1);
+			cout << "M";
+			*mx -= 1;
+			*my += 1;
+		}
+	}
+	else if (*mx = *x) {
+		if (*my > * y) {
+			gotoxy(*mx, *my - 1);
+			cout << "M";
+			*my -= 1;
+		}
+		else if (*my = *y) {
+			gotoxy(*mx, *my);
+			cout << "M";
+		}
+		else {
+			gotoxy(*mx, *my + 1);
+			cout << "M";
+			*my += 1;
+		}
+	}
+	else {
+		if (*my > * y) {
+			gotoxy(*mx + 1, *my - 1);
+			cout << "M";
+			*mx += 1;
+			*my -= 1;
+		}
+		else if (*my = *y) {
+			gotoxy(*mx + 1, *my);
+			cout << "M";
+			*mx += 1;
+		}
+		else {
+			gotoxy(*mx + 1, *my + 1);
+			cout << "M";
+			*mx += 1;
+			*my -= 1;
+		}
+	}
 }
