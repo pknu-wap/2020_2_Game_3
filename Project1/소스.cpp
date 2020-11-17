@@ -1,6 +1,8 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include <conio.h>
 #include <CoreWindow.h>
+#include <time.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -10,16 +12,30 @@ constexpr auto RIGHT = 3;
 constexpr auto LEFT = 4;
 constexpr auto SPACE = 0;
 
-class Monster {
+class Player {
 public:
+	int x, y;
 	int HP;
 	int AP;
-	int Xpos;
-	int Ypos;
-	void Move(int* mx, int* my, int* x, int* y);
+	void Move(int* x, int* y, int px, int py);
+
 };
 
-void LaunchManager();
+class Monster {
+public:
+	int x, y;
+	int HP;
+	int AP;
+	void Move(int* x, int* y, int* mx, int* my);
+};
+
+class Map {
+public:
+	void MapDraw_1(int*, int*, int*, int*);
+	void Draw(int*, int*, int*, int*);
+};
+
+
 int Menu();
 void gotoxy(int, int);
 int keycontrol();
@@ -27,57 +43,49 @@ void cursor(int);
 
 void GameManager();
 void Stage_1();
-void Move(int*, int*, int, int);
-void MapDraw_1(int*, int*, int*, int*);
 char temp[20][56];
 char map_1[20][56] = {
 	{"11111111111111111111111111111111111111111111111111"},
-	{"10p01000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000zzzzzzzz0000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"1000000000000000000000000000m000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000g01"},
-	{"10000000000000000000000000000000000000000000000001"},
+	{"10p01000000000000000000000000000000000001111000001"},
+	{"10001000000000000000000000000000000000000011000001"},
+	{"10001000000000000000000000000000000000000001000001"},
+	{"10001000111111111111111111110000000000000010000001"},
+	{"10001000000000000000000000000000000000000010000001"},
+	{"10001000000000000000000000000000000000000100000001"},
+	{"10000000000000000000000000000000000000001000000001"},
+	{"11111000000000000000000000000000000000010000000001"},
+	{"10001000000000000000000000000000000000100000000001"},
+	{"100i1000000000000000000000000000000001000000000001"},
+	{"10111000000000000010000000000000000000000000000001"},
+	{"10000000000000000010000000000000000000000000000001"},
+	{"11111000000000000010000000000000001000000000000001"},
+	{"1000100000000000001000000000m000010000000000000001"},
+	{"10001111111111111111111111111111111111111111000001"},
+	{"10000100000000000000000000000000000001000000000001"},
+	{"10000100000000000000000000000000000001000000000g01"},
+	{"10000100000000000000000000000000000000000000000001"},
 	{"11111111111111111111111111111111111111111111111111"},
 };
 
 
-//void PlayerInfor();//«√∑π¿ÃæÓ µ•¿Ã≈Õ∏¶ ∞°¡ÆøÕº≠ ¡¯«‡
-//void Battle();//∏ÛΩ∫≈Õ,«√∑π¿ÃæÓ µ•¿Ã≈Õ∏¶ ∞°¡ÆøÕº≠ ¡¯«‡
+//void PlayerInfor();//ÌîåÎ†àÏù¥Ïñ¥ Îç∞Ïù¥ÌÑ∞Î•º Í∞ÄÏ†∏ÏôÄÏÑú ÏßÑÌñâ
+//void Battle();//Î™¨Ïä§ÌÑ∞,ÌîåÎ†àÏù¥Ïñ¥ Îç∞Ïù¥ÌÑ∞Î•º Í∞ÄÏ†∏ÏôÄÏÑú ÏßÑÌñâ
 
 
 int main() {
 
-	LaunchManager();
+	Menu();
 	GameManager();
 
 	return 0;
 }
 
-void LaunchManager() {
-	system("mode con cols=70 lines=30 | title ¡¶∏Ò");//√÷¥Îπ¸¿ß ∞°∑Œ100 ºº∑Œ30
-	cursor(0);
-	Menu();
-}
+
 void GameManager() {
 	system("cls");
 	Stage_1();
-	//Ω∫≈◊¿Ã¡ˆ1~5 Ω««‡
+	//Ïä§ÌÖåÏù¥ÏßÄ1~5 Ïã§Ìñâ
 }
-
-
 
 void gotoxy(int x, int y) {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -86,31 +94,55 @@ void gotoxy(int x, int y) {
 	pos.Y = y;
 	SetConsoleCursorPosition(consoleHandle, pos);
 }
-void cursor(int n) {  // ƒøº≠ ∫∏¿Ã±‚ & º˚±‚±‚
+void cursor(int n) {  // Ïª§ÏÑú Î≥¥Ïù¥Í∏∞ & Ïà®Í∏∞Í∏∞
 	HANDLE hConsole;
-	CONSOLE_CURSOR_INFO ConsoleCursor; //±∏¡∂√º º±æ 
+	CONSOLE_CURSOR_INFO ConsoleCursor; //Íµ¨Ï°∞Ï≤¥ ÏÑ†Ïñ∏ 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	ConsoleCursor.bVisible = n; //ƒøº≠ ≥Î√‚ø©∫Œ 1:∫∏¿”, 0:æ»∫∏¿” 
-	ConsoleCursor.dwSize = 1; //ƒøº≠ ªÁ¿Ã¡Ó 
+	ConsoleCursor.bVisible = n; //Ïª§ÏÑú ÎÖ∏Ï∂úÏó¨Î∂Ä 1:Î≥¥ÏûÑ, 0:ÏïàÎ≥¥ÏûÑ 
+	ConsoleCursor.dwSize = 1; //Ïª§ÏÑú ÏÇ¨Ïù¥Ï¶à 
 	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
 }
+int keycontrol() {
+	char key = _getch();
+
+	if (key == 'w' || key == 'W') {
+		return UP;
+	}
+	else if (key == 's' || key == 'S') {
+		return DOWN;
+	}
+	else if (key == 'a' || key == 'A') {
+		return LEFT;
+	}
+	else if (key == 'd' || key == 'D') {
+		return RIGHT;
+	}
+	else if (key == ' ') {
+		return SPACE;
+	}
+}
+
 
 int Menu() {
-	//∏ﬁ¥∫ √‚∑¬
+
+	system("mode con cols=70 lines=30 | title Ï†úÎ™©");//ÏµúÎåÄÎ≤îÏúÑ Í∞ÄÎ°ú100 ÏÑ∏Î°ú30
+	cursor(0);
+
+	//Î©îÎâ¥ Ï∂úÎ†•
 	cout << "\n\n\n\n";
-	cout << " ¡¶∏Ò¿ª πª∑Œ «œ¡ˆ...\n";
+	cout << " Ï†úÎ™©ÏùÑ Î≠òÎ°ú ÌïòÏßÄ...\n";
 
 	int x = 30, y = 15;
 	gotoxy(x - 2, y);
-	cout << "> ∞‘¿” Ω√¿€";
+	cout << "> Í≤åÏûÑ ÏãúÏûë";
 	gotoxy(x, y + 1);
-	cout << "±‚∑œ ∫∏±‚";
+	cout << "Í∏∞Î°ù Î≥¥Í∏∞";
 	gotoxy(x, y + 2);
-	cout << "∞‘¿” ¡æ∑·";
+	cout << "Í≤åÏûÑ Ï¢ÖÎ£å";
 	gotoxy(x - 20, y + 4);
-	cout << "w,s∏¶ ≈Î«ÿ ªÛ«œ ¿Ãµø¿ª «œ∞Ì, Ω∫∆‰¿ÃΩ∫πŸ∑Œ º±≈√«’¥œ¥Ÿ!!\n";
+	cout << "w,sÎ•º ÌÜµÌï¥ ÏÉÅÌïò Ïù¥ÎèôÏùÑ ÌïòÍ≥†, Ïä§ÌéòÏù¥Ïä§Î∞îÎ°ú ÏÑ†ÌÉùÌï©ÎãàÎã§!!\n";
 
-	//∏ﬁ¥∫ º±≈√
+	//Î©îÎâ¥ ÏÑ†ÌÉù
 	while (1) {
 		int n = keycontrol();
 		switch (n) {
@@ -141,79 +173,72 @@ int Menu() {
 		}
 	}
 }
-
-int keycontrol() {
-	char key = _getch();
-
-	if (key == 'w' || key == 'W') {
-		return UP;
-	}
-	else if (key == 's' || key == 'S') {
-		return DOWN;
-	}
-	else if (key == 'a' || key == 'A') {
-		return LEFT;
-	}
-	else if (key == 'd' || key == 'D') {
-		return RIGHT;
-	}
-	else if (key == ' ') {
-		return SPACE;
-	}
-}
-
-/*GameRecordø°º≠ π∫∞° ¿ÃªÛ«œ¥Ÿ...
-//void GameRecord(){
-	int n = keycontrol();
-	system("cls");
-	//∞‘¿” ±‚∑œ ∫“∑Øø¿±‚
-	cout << "∞‘¿” ±‚∑œ¿ª √‚∑¬«ÿ∫∏¿⁄!!\n" << "≥—æÓ∞°∑¡∏È Ω∫∆‰¿ÃΩ∫πŸ∏¶ ¥©∏£ººø‰...\n";
-	if (n == SPACE) {
-		system("cls");
-		Menu();
-	}
-
-}*/
-
-
 void Stage_1() {
-	int x, y, mx, my;
 	int on = 1;
-	Monster monster_1;
+	Player p;
+	Monster mon1;
+	Map map1;
 
 	gotoxy(0, 21);
-	cout << "∞‘¿”¿ª Ω√¿€«’¥œ¥Ÿ!\n";
-	cout << "P¥¬ «√∑π¿ÃæÓ¿« «ˆ¿Á ¿ßƒ°¿‘¥œ¥Ÿ." << "wsad∏¶ ¿ÃøÎ«ÿ ¡∂¿€«’¥œ¥Ÿ.\n";
-	cout << "!¥¬ ∏ÛΩ∫≈Õ∞° ¿÷¥¬ ¿ßƒ°¿‘¥œ¥Ÿ." << "$¥¬ æ∆¿Ã≈€¿« ¿ßƒ°¿‘¥œ¥Ÿ.\n";
-	cout << "∏Ò«•¡ˆ¡°¿Œ G±Ó¡ˆ ¿Ãµø«œ∏È Ω∫≈◊¿Ã¡ˆ∏¶ ≈¨∏ÆæÓ«’¥œ¥Ÿ!\n";
+	cout << "Í≤åÏûÑÏùÑ ÏãúÏûëÌï©ÎãàÎã§!\n";
+	cout << "PÎäî ÌîåÎ†àÏù¥Ïñ¥Ïùò ÌòÑÏû¨ ÏúÑÏπòÏûÖÎãàÎã§." << "wsadÎ•º Ïù¥Ïö©Ìï¥ Ï°∞ÏûëÌï©ÎãàÎã§.\n";
+	cout << "!Îäî Î™¨Ïä§ÌÑ∞Í∞Ä ÏûàÎäî ÏúÑÏπòÏûÖÎãàÎã§." << "$Îäî ÏïÑÏù¥ÌÖúÏùò ÏúÑÏπòÏûÖÎãàÎã§.\n";
+	cout << "Î™©ÌëúÏßÄÏ†êÏù∏ GÍπåÏßÄ Ïù¥ÎèôÌïòÎ©¥ Ïä§ÌÖåÏù¥ÏßÄÎ•º ÌÅ¥Î¶¨Ïñ¥Ìï©ÎãàÎã§!\n";
 
-	MapDraw_1(&x, &y, &mx, &my);
+	map1.MapDraw_1(&p.x, &p.y, &mon1.x, &mon1.y);
+	//void map(player1.x
 
 	while (on) {
 		int n = keycontrol();
 		switch (n) {
 		case UP: {
-			Move(&x, &y, 0, -1);
-			monster_1.Move(&mx, &my, &x, &y);
+			if (map_1[p.y - 1][p.x] == '1')
+			{
+				p.Move(&p.x, &p.y, 0, 0);
+			}
+			else {
+				p.Move(&p.x, &p.y, 0, -1);
+				mon1.Move(&mon1.x, &mon1.y, &p.x, &p.y);
+			}
 			break; }
 		case DOWN: {
-			Move(&x, &y, 0, 1);
-			monster_1.Move(&mx, &my, &x, &y);
+			if (map_1[p.y + 1][p.x] == '1')
+			{
+				p.Move(&p.x, &p.y, 0, 0);
+			}
+			else {
+				p.Move(&p.x, &p.y, 0, 1);
+				mon1.Move(&mon1.x, &mon1.y, &p.x, &p.y);
+			}
 			break; }
 		case RIGHT: {
-			Move(&x, &y, 1, 0);
-			monster_1.Move(&mx, &my, &x, &y);
+			if (map_1[p.y][p.x + 1] == '1')
+			{
+				p.Move(&p.x, &p.y, 0, 0);
+			}
+			else {
+				p.Move(&p.x, &p.y, 1, 0);
+				mon1.Move(&mon1.x, &mon1.y, &p.x, &p.y);
+			}
 			break; }
 		case LEFT: {
-			Move(&x, &y, -1, 0);
-			monster_1.Move(&mx, &my, &x, &y);
+			if (map_1[p.y][p.x - 1] == '1')
+			{
+				p.Move(&p.x, &p.y, 0, 0);
+			}
+			else {
+				p.Move(&p.x, &p.y, -1, 0);
+				mon1.Move(&mon1.x, &mon1.y, &p.x, &p.y);
+			}
 			break; }
 		case SPACE:
 			on = 0;
 		}
 	}
 }
-void MapDraw_1(int* x, int* y, int* mx, int* my) {
+
+
+void Map::MapDraw_1(int* x, int* y, int* mx, int* my) {
 	int i, j;
 	int a, b;
 	for (i = 0; i < 20; i++) {
@@ -222,21 +247,21 @@ void MapDraw_1(int* x, int* y, int* mx, int* my) {
 				gotoxy(j, i);
 				cout << " ";
 			}
-			else if (map_1[i][j] == '1') {		//∫Æ∏È
+			else if (map_1[i][j] == '1') {		//Î≤ΩÎ©¥
 				gotoxy(j, i);
 				cout << "*";
 			}
-			else if (map_1[i][j] == 'p') {//Ω√¿€¡°
+			else if (map_1[i][j] == 'p') {//ÏãúÏûëÏ†ê
 				gotoxy(j, i);
 				cout << "P";
 				*x = j;
 				*y = i;
 			}
-			else if (map_1[i][j] == 'g') {//∏Ò«•¡ˆ¡°
+			else if (map_1[i][j] == 'g') {//Î™©ÌëúÏßÄÏ†ê
 				gotoxy(j, i);
 				cout << "G";
 			}
-			else if (map_1[i][j] == 'i') {//æ∆¿Ã≈€
+			else if (map_1[i][j] == 'i') {//ÏïÑÏù¥ÌÖú
 				gotoxy(j, i);
 				cout << "$";
 			}
@@ -244,7 +269,7 @@ void MapDraw_1(int* x, int* y, int* mx, int* my) {
 	}
 	for (a = 0; a < 20; a++) {
 		for (b = 0; b < 56; b++) {
-			if (map_1[a][b] == 'm') {//∏ÛΩ∫≈Õ
+			if (map_1[a][b] == 'm') {//Î™¨Ïä§ÌÑ∞
 				gotoxy(b, a);
 				cout << "!";
 				*mx = b;
@@ -253,9 +278,101 @@ void MapDraw_1(int* x, int* y, int* mx, int* my) {
 		}
 	}
 }
+void Map::Draw(int* x, int* y, int* mx, int* my)
+{
+	system(" mode  con   cols=141 ");
+	srand(time(NULL));
+	int set_map = 420;	//ÔøΩÔøΩÔøΩÔøΩ ≈¨ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩŸæÔøΩÔøΩ
 
-void Move(int* x, int* y, int px, int py) {
+	bool map[50][140];
+	for (int y = 0; y < 50; y++) {
+		for (int x = 0; x < 140; x++) {
+			if (rand() % 1000 < set_map) {
+				map[y][x] = true;
+			}
+			else {
+				map[y][x] = false;
+			}
+		}
+	}
+	for (int y = 0; y < 50; y++) {
+		for (int x = 0; x < 140; x++) {
+			//cout << map[y][x];		//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 
+			if (map[y][x] == true) {	//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+				cout << ' ';
+			}
+			else {
+				cout << '#';
+			}
+
+		}
+		cout << '\n';
+	}
+	cout << "\n\n\n";
+
+	bool temp_map[50][140];
+
+	for (int k = 0; k < 1; k++) {
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				int count = 0;
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						int nx = x + i;
+						int ny = y + j;
+
+						if (i == 0 && j == 0) {
+							//ƒ´ÔøΩÔøΩ∆ÆÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+						}
+
+						else if (nx < 0 || ny < 0 || nx >= 140 || ny >= 50) {
+							count = count + 1;
+						}
+
+						else if (map[ny][nx] != true) {
+							count = count + 1;
+						}
+					}
+				}
+				if (count < 5) {
+					temp_map[y][x] = true;
+				}
+				else {
+					temp_map[y][x] = false;
+				}
+			}
+		}
+
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				map[y][x] = temp_map[y][x];
+			}
+		}
+
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				//cout << map[y][x];			//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+				if (x == 0 || y == 0 || x == 139 || y == 49) {
+					cout << '#';
+				}
+				else if (map[y][x] == true) {	//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+					cout << ' ';
+				}
+				else {
+					cout << '#';
+				}
+			}
+			cout << '\n';
+		}
+		cout << "\n\n\n";
+	}
+
+}
+
+
+void Player::Move(int* x, int* y, int px, int py) {
+	
 	gotoxy(*x, *y);
 	cout << " ";
 	gotoxy(*x + px, *y + py);
@@ -264,7 +381,6 @@ void Move(int* x, int* y, int px, int py) {
 	*x += px;
 	*y += py;
 }
-
 void Monster::Move(int* mx, int* my, int* x, int* y) {
 	gotoxy(*mx, *my);
 	cout << " ";
