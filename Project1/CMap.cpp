@@ -12,7 +12,7 @@ CMap::~CMap()
 
 void CMap::mapping()
 {
-	system(" mode  con   cols=141 ");
+	system("mode con cols=141 lines=56");
 	srand(time(NULL));
 	int set_map = 420;	//값이 클수록 벽의 비율 줄어듦
 
@@ -86,6 +86,5 @@ void CMap::mapping()
 		}
 		std::cout << '\n';
 	}
-	std::cout << '\n';
 
 }
