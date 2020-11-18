@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CSystem.cpp" />
@@ -151,6 +152,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="CMap.h" />
     <ClInclude Include="CMonster.h" />
     <ClInclude Include="CSystem.h" />

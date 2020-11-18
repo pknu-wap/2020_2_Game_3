@@ -18,6 +18,9 @@
     </ClCompile>
     <ClCompile Include="소스.cpp" />
     <ClCompile Include="Doublebuffer.cpp" />
+    <ClCompile Include="Character.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMonster.h">
@@ -30,5 +33,8 @@
       <Filter>object</Filter>
     </ClInclude>
     <ClInclude Include="Doublebuffer.h" />
+    <ClInclude Include="Character.h">
+      <Filter>object</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ void Stage_1();
 void Move(int*, int*, int, int);
 void MapDraw_1(int*, int*, int*, int*);
 char temp[20][56];
-char map_1[20][56] = {
+extern char map_1[20][56] = {
 	{"11111111111111111111111111111111111111111111111111"},
 	{"10p01000000000000000000000000000000000000000000001"},
 	{"10000000000000000000000000000000000000000000000001"},
@@ -196,9 +196,9 @@ void Stage_1() {
 
 void Move(int* x, int* y, int px, int py) {//按眉 积己 饶 沥府
 
-	gotoxy(*x, *y);
+	cSystem.gotoxy(*x, *y);
 	cout << " ";
-	gotoxy(*x + px, *y + py);
+	cSystem.gotoxy(*x + px, *y + py);
 	cout << "P";
 
 	*x += px;
