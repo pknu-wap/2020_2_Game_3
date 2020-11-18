@@ -71,20 +71,39 @@ void CMap::mapping()
 
 	for (int y = 0; y < 50; y++) {
 		for (int x = 0; x < 140; x++) {
-			//std::cout << map[y][x];			//숫자로 보기
-
 			if (x == 0 || y == 0 || x == 139 || y == 49) {
-				std::cout << '#';
+				newMap[y][x] = '#';
 			}
-			else if (map[y][x] == true) {	//문자로 보기
-				std::cout << ' ';
+			else if (map[y][x] == true) {
+				newMap[y][x] = ' ';
 			}
 			else {
-				std::cout << '#';
+				newMap[y][x] = '#';
 			}
+		}
+	}
 
+	int num_c = 0;
+
+	if (num_c == 0) {
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				if (newMap[y][x] == ' ' && num_c == 0) {
+					num_c += 1;
+					newMap[y][x] = 'P';
+				}
+			}
+		}
+	}
+
+}
+
+void CMap::get_map()
+{
+	for (int y = 0; y < 50; y++) {
+		for (int x = 0; x < 140; x++) {
+			std::cout << newMap[y][x];
 		}
 		std::cout << '\n';
 	}
-
 }

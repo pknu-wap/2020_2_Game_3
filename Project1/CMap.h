@@ -8,7 +8,9 @@ class CMap
 public:
 	CMap();
 	~CMap();
-
+public:
+	char newMap[50][140];
 public:
 	void mapping();
+	void get_map();
 };
