@@ -25,3 +25,23 @@ void CSystem::cursor(int n){ // 커서 보이기 & 숨기기
 	ConsoleCursor.dwSize = 1; //커서 사이즈 
 	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
 }
+
+int CSystem::keycontrol() {
+	char key = _getch();
+
+	if (key == 'w' || key == 'W') {
+		return UP;
+	}
+	else if (key == 's' || key == 'S') {
+		return DOWN;
+	}
+	else if (key == 'a' || key == 'A') {
+		return LEFT;
+	}
+	else if (key == 'd' || key == 'D') {
+		return RIGHT;
+	}
+	else if (key == ' ') {
+		return SPACE;
+	}
+}
