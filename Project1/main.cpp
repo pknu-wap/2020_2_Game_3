@@ -5,23 +5,10 @@
 #include "CMap.h"
 #include "CMonster.h"
 #include "CSystem.h"
+#include "CCharacter.h"
 
 using namespace std;
 
-constexpr auto UP = 1;
-constexpr auto DOWN = 2;
-constexpr auto RIGHT = 3;
-constexpr auto LEFT = 4;
-constexpr auto SPACE = 0;
-
-class Monster {
-public:
-	int HP;
-	int AP;
-	int Xpos;
-	int Ypos;
-	void Move(int* mx, int* my, int* x, int* y);
-};
 
 void LaunchManager();
 int Menu();
@@ -29,35 +16,6 @@ int keycontrol();
 
 void GameManager();
 void Stage_1();
-void Move(int*, int*, int, int);
-void MapDraw_1(int*, int*, int*, int*);
-char temp[20][56];
-char map_1[20][56] = {
-	{"11111111111111111111111111111111111111111111111111"},
-	{"10p01000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000g01"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"11111111111111111111111111111111111111111111111111"},
-};
-
-
-//void PlayerInfor();//플레이어 데이터를 가져와서 진행
-//void Battle();//몬스터,플레이어 데이터를 가져와서 진행
 
 
 int main() {
@@ -125,48 +83,13 @@ int Menu() {
 	}
 }
 
-int keycontrol() {
-	char key = _getch();
-
-	if (key == 'w' || key == 'W') {
-		return UP;
-	}
-	else if (key == 's' || key == 'S') {
-		return DOWN;
-	}
-	else if (key == 'a' || key == 'A') {
-		return LEFT;
-	}
-	else if (key == 'd' || key == 'D') {
-		return RIGHT;
-	}
-	else if (key == ' ') {
-		return SPACE;
-	}
-}
-
-/*GameRecord에서 뭔가 이상하다...
-//void GameRecord(){
-	int n = keycontrol();
-	system("cls");
-	//게임 기록 불러오기
-	cout << "게임 기록을 출력해보자!!\n" << "넘어가려면 스페이스바를 누르세요...\n";
-	if (n == SPACE) {
-		system("cls");
-		Menu();
-	}
-
-}*/
-
-
 void Stage_1() {
 	int x, y, mx, my;
 	int on = 1;
-	Monster monster_1;
-
 	CMonster monster;
-
-	MapDraw_1(&x, &y, &mx, &my);
+	CMap map1;
+	CCharacter player;
+	
 
 	while (on) {
 		int n = keycontrol();
@@ -191,17 +114,5 @@ void Stage_1() {
 			on = 0;
 		}
 	}
-}
-
-
-void Move(int* x, int* y, int px, int py) {//객체 생성 후 정리
-
-	gotoxy(*x, *y);
-	cout << " ";
-	gotoxy(*x + px, *y + py);
-	cout << "P";
-
-	*x += px;
-	*y += py;
 }
 
