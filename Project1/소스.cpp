@@ -1,325 +1,91 @@
-#include <iostream>
-#include <conio.h>
-#include <CoreWindow.h>
-
+Ôªø#include <iostream>
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
-constexpr auto UP = 1;
-constexpr auto DOWN = 2;
-constexpr auto RIGHT = 3;
-constexpr auto LEFT = 4;
-constexpr auto SPACE = 0;
+string MapGen();
 
-class Monster {
-public:
-	int HP;
-	int AP;
-	int Xpos;
-	int Ypos;
-	void Move(int* mx, int* my, int* x, int* y);
-};
+void map()
+{
+	system(" mode  con   cols=141 ");
+	srand(time(NULL));
 
-void LaunchManager();
-int Menu();
-void gotoxy(int, int);
-int keycontrol();
-void cursor(int);
-
-void GameManager();
-void Stage_1();
-void Move(int*, int*, int, int);
-void MapDraw_1(int*, int*, int*, int*);
-char temp[20][56];
-char map_1[20][56] = {
-	{"11111111111111111111111111111111111111111111111111"},
-	{"10p01000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000zzzzzzzz0000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"1000000000000000000000000000m000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"10000000000000000000000000000000000000000000000g01"},
-	{"10000000000000000000000000000000000000000000000001"},
-	{"11111111111111111111111111111111111111111111111111"},
-};
-
-
-//void PlayerInfor();//«√∑π¿ÃæÓ µ•¿Ã≈Õ∏¶ ∞°¡ÆøÕº≠ ¡¯«‡
-//void Battle();//∏ÛΩ∫≈Õ,«√∑π¿ÃæÓ µ•¿Ã≈Õ∏¶ ∞°¡ÆøÕº≠ ¡¯«‡
-
-
-int main() {
-
-	LaunchManager();
-	GameManager();
-
-	return 0;
+	cout << MapGen();
 }
 
-void LaunchManager() {
-	system("mode con cols=70 lines=30 | title ¡¶∏Ò");//√÷¥Îπ¸¿ß ∞°∑Œ100 ºº∑Œ30
-	cursor(0);
-	Menu();
-}
-void GameManager() {
-	system("cls");
-	Stage_1();
-	//Ω∫≈◊¿Ã¡ˆ1~5 Ω««‡
-}
+string MapGen()
+{
+	int set_map = 420;	//ÔøΩÔøΩÔøΩÔøΩ ≈¨ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩŸæÔøΩÔøΩ
 
-
-
-void gotoxy(int x, int y) {
-	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD pos;
-	pos.X = x;
-	pos.Y = y;
-	SetConsoleCursorPosition(consoleHandle, pos);
-}
-void cursor(int n) {  // ƒøº≠ ∫∏¿Ã±‚ & º˚±‚±‚
-	HANDLE hConsole;
-	CONSOLE_CURSOR_INFO ConsoleCursor; //±∏¡∂√º º±æ 
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	ConsoleCursor.bVisible = n; //ƒøº≠ ≥Î√‚ø©∫Œ 1:∫∏¿”, 0:æ»∫∏¿” 
-	ConsoleCursor.dwSize = 1; //ƒøº≠ ªÁ¿Ã¡Ó 
-	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
-}
-
-int Menu() {
-	//∏ﬁ¥∫ √‚∑¬
-	cout << "\n\n\n\n";
-	cout << " ¡¶∏Ò¿ª πª∑Œ «œ¡ˆ...\n";
-
-	int x = 30, y = 15;
-	gotoxy(x - 2, y);
-	cout << "> ∞‘¿” Ω√¿€";
-	gotoxy(x, y + 1);
-	cout << "±‚∑œ ∫∏±‚";
-	gotoxy(x, y + 2);
-	cout << "∞‘¿” ¡æ∑·";
-	gotoxy(x - 20, y + 4);
-	cout << "w,s∏¶ ≈Î«ÿ ªÛ«œ ¿Ãµø¿ª «œ∞Ì, Ω∫∆‰¿ÃΩ∫πŸ∑Œ º±≈√«’¥œ¥Ÿ!!\n";
-
-	//∏ﬁ¥∫ º±≈√
-	while (1) {
-		int n = keycontrol();
-		switch (n) {
-		case UP: {
-			if (y > 15) {
-				gotoxy(x - 2, y);
-				cout << " ";
-				gotoxy(x - 2, --y);
-				cout << ">";
+	bool map[50][140];
+	for (int y = 0; y < 50; y++) {
+		for (int x = 0; x < 140; x++) {
+			if (rand() % 1000 < set_map) {
+				map[y][x] = true;
 			}
-			break;
-		}
-		case DOWN: {
-			if (y < 17) {
-				gotoxy(x - 2, y);
-				cout << " ";
-				gotoxy(x - 2, ++y);
-				cout << ">";
-			}
-			break;
-		}
-		case SPACE: {
-			if (y == 15) return 0;
-			//if (y == 16) GameRecord();
-			if (y == 17) system("exit");
-			break;
-		}
-		}
-	}
-}
-
-int keycontrol() {
-	char key = _getch();
-
-	if (key == 'w' || key == 'W') {
-		return UP;
-	}
-	else if (key == 's' || key == 'S') {
-		return DOWN;
-	}
-	else if (key == 'a' || key == 'A') {
-		return LEFT;
-	}
-	else if (key == 'd' || key == 'D') {
-		return RIGHT;
-	}
-	else if (key == ' ') {
-		return SPACE;
-	}
-}
-
-/*GameRecordø°º≠ π∫∞° ¿ÃªÛ«œ¥Ÿ...
-//void GameRecord(){
-	int n = keycontrol();
-	system("cls");
-	//∞‘¿” ±‚∑œ ∫“∑Øø¿±‚
-	cout << "∞‘¿” ±‚∑œ¿ª √‚∑¬«ÿ∫∏¿⁄!!\n" << "≥—æÓ∞°∑¡∏È Ω∫∆‰¿ÃΩ∫πŸ∏¶ ¥©∏£ººø‰...\n";
-	if (n == SPACE) {
-		system("cls");
-		Menu();
-	}
-
-}*/
-
-
-void Stage_1() {
-	int x, y, mx, my;
-	int on = 1;
-	Monster monster_1;
-
-	gotoxy(0, 21);
-	cout << "∞‘¿”¿ª Ω√¿€«’¥œ¥Ÿ!\n";
-	cout << "P¥¬ «√∑π¿ÃæÓ¿« «ˆ¿Á ¿ßƒ°¿‘¥œ¥Ÿ." << "wsad∏¶ ¿ÃøÎ«ÿ ¡∂¿€«’¥œ¥Ÿ.\n";
-	cout << "!¥¬ ∏ÛΩ∫≈Õ∞° ¿÷¥¬ ¿ßƒ°¿‘¥œ¥Ÿ." << "$¥¬ æ∆¿Ã≈€¿« ¿ßƒ°¿‘¥œ¥Ÿ.\n";
-	cout << "∏Ò«•¡ˆ¡°¿Œ G±Ó¡ˆ ¿Ãµø«œ∏È Ω∫≈◊¿Ã¡ˆ∏¶ ≈¨∏ÆæÓ«’¥œ¥Ÿ!\n";
-
-	MapDraw_1(&x, &y, &mx, &my);
-
-	while (on) {
-		int n = keycontrol();
-		switch (n) {
-		case UP: {
-			Move(&x, &y, 0, -1);
-			monster_1.Move(&mx, &my, &x, &y);
-			break; }
-		case DOWN: {
-			Move(&x, &y, 0, 1);
-			monster_1.Move(&mx, &my, &x, &y);
-			break; }
-		case RIGHT: {
-			Move(&x, &y, 1, 0);
-			monster_1.Move(&mx, &my, &x, &y);
-			break; }
-		case LEFT: {
-			Move(&x, &y, -1, 0);
-			monster_1.Move(&mx, &my, &x, &y);
-			break; }
-		case SPACE:
-			on = 0;
-		}
-	}
-}
-void MapDraw_1(int* x, int* y, int* mx, int* my) {
-	int i, j;
-	int a, b;
-	for (i = 0; i < 20; i++) {
-		for (j = 0; j < 56; j++) {
-			if (map_1[i][j] == '0') {
-				gotoxy(j, i);
-				cout << " ";
-			}
-			else if (map_1[i][j] == '1') {		//∫Æ∏È
-				gotoxy(j, i);
-				cout << "*";
-			}
-			else if (map_1[i][j] == 'p') {//Ω√¿€¡°
-				gotoxy(j, i);
-				cout << "P";
-				*x = j;
-				*y = i;
-			}
-			else if (map_1[i][j] == 'g') {//∏Ò«•¡ˆ¡°
-				gotoxy(j, i);
-				cout << "G";
-			}
-			else if (map_1[i][j] == 'i') {//æ∆¿Ã≈€
-				gotoxy(j, i);
-				cout << "$";
+			else {
+				map[y][x] = false;
 			}
 		}
 	}
-	for (a = 0; a < 20; a++) {
-		for (b = 0; b < 56; b++) {
-			if (map_1[a][b] == 'm') {//∏ÛΩ∫≈Õ
-				gotoxy(b, a);
-				cout << "!";
-				*mx = b;
-				*my = a;
+
+	bool temp_map[50][140];
+
+	for (int k = 0; k < 10; k++) {
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				int count = 0;
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						int nx = x + i;
+						int ny = y + j;
+
+						if (i == 0 && j == 0) {
+							//ƒ´ÔøΩÔøΩ∆ÆÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+						}
+
+						else if (nx < 0 || ny < 0 || nx >= 140 || ny >= 50) {
+							count = count + 1;
+						}
+
+						else if (map[ny][nx] != true) {
+							count = count + 1;
+						}
+					}
+				}
+				if (count < 5) {
+					temp_map[y][x] = true;
+				}
+				else {
+					temp_map[y][x] = false;
+				}
+			}
+		}
+
+		for (int y = 0; y < 50; y++) {
+			for (int x = 0; x < 140; x++) {
+				map[y][x] = temp_map[y][x];
 			}
 		}
 	}
-}
 
-void Move(int* x, int* y, int px, int py) {
+	string temp = "";
 
-	gotoxy(*x, *y);
-	cout << " ";
-	gotoxy(*x + px, *y + py);
-	cout << "P";
-
-	*x += px;
-	*y += py;
-}
-
-void Monster::Move(int* mx, int* my, int* x, int* y) {
-	gotoxy(*mx, *my);
-	cout << " ";
-	if (*mx > * x) {
-		if (*my > * y) {
-			gotoxy(*mx - 1, *my - 1);
-			cout << "M";
-			*mx -= 1;
-			*my -= 1;
+	for (int y = 0; y < 50; y++) {
+		for (int x = 0; x < 140; x++) {
+			//cout << map[y][x];			//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+			if (x == 0 || y == 0 || x == 139 || y == 49) {
+				temp += '#';
+			}
+			else if (map[y][x] == true) {	//ÔøΩÔøΩÔøΩ⁄∑ÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+				temp += ' ';
+			}
+			else {
+				temp += '#';
+			}
 		}
-		else if (*my = *y) {
-			gotoxy(*mx - 1, *my);
-			cout << "M";
-			*mx -= 1;
-		}
-		else {
-			gotoxy(*mx - 1, *my + 1);
-			cout << "M";
-			*mx -= 1;
-			*my += 1;
-		}
+		temp += '\n';
 	}
-	else if (*mx = *x) {
-		if (*my > * y) {
-			gotoxy(*mx, *my - 1);
-			cout << "M";
-			*my -= 1;
-		}
-		else if (*my = *y) {
-			gotoxy(*mx, *my);
-			cout << "M";
-		}
-		else {
-			gotoxy(*mx, *my + 1);
-			cout << "M";
-			*my += 1;
-		}
-	}
-	else {
-		if (*my > * y) {
-			gotoxy(*mx + 1, *my - 1);
-			cout << "M";
-			*mx += 1;
-			*my -= 1;
-		}
-		else if (*my = *y) {
-			gotoxy(*mx + 1, *my);
-			cout << "M";
-			*mx += 1;
-		}
-		else {
-			gotoxy(*mx + 1, *my + 1);
-			cout << "M";
-			*mx += 1;
-			*my -= 1;
-		}
-	}
+
+	return temp;
 }
