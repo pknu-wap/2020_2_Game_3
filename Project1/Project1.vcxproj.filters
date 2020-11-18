@@ -17,6 +17,7 @@
       <Filter>object</Filter>
     </ClCompile>
     <ClCompile Include="소스.cpp" />
+    <ClCompile Include="Doublebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMonster.h">
@@ -28,5 +29,6 @@
     <ClInclude Include="CMap.h">
       <Filter>object</Filter>
     </ClInclude>
+    <ClInclude Include="Doublebuffer.h" />
   </ItemGroup>
 </Project>
