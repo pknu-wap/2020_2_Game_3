@@ -11,6 +11,7 @@ public:
 
 public:
 	void gotoxy(int x, int y);
+	void cursor(int n);
 };
 
 static CSystem cSystem;

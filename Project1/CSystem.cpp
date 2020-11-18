@@ -16,3 +16,12 @@ void CSystem::gotoxy(int x, int y)
 	pos.Y = y;
 	SetConsoleCursorPosition(consoleHandle, pos);
 }
+
+void CSystem::cursor(int n){ // 커서 보이기 & 숨기기
+	HANDLE hConsole;
+	CONSOLE_CURSOR_INFO ConsoleCursor; //구조체 선언 
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	ConsoleCursor.bVisible = n; //커서 노출여부 1:보임, 0:안보임 
+	ConsoleCursor.dwSize = 1; //커서 사이즈 
+	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
+}
