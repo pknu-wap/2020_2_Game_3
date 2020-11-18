@@ -91,6 +91,8 @@ void CMap::mapping()
 				if (newMap[y][x] == ' ' && num_c == 0) {
 					num_c += 1;
 					newMap[y][x] = 'P';
+					c_x = x;
+					c_y = y;
 				}
 			}
 		}
@@ -101,6 +103,8 @@ void CMap::mapping()
 			if (newMap[y][70] == ' ' && num_m == 0) {
 				num_m += 1;
 				newMap[y][70] = 'M';
+				m_x = 70;
+				m_y = y;
 			}
 		}
 	}
@@ -110,6 +114,8 @@ void CMap::mapping()
 			if (newMap[y][70] == ' ' && num_m == 0) {
 				num_m += 1;
 				newMap[y][70] = 'M';
+				m_x = 70;
+				m_y = y;
 			}
 		}
 	}
