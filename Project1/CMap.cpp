@@ -83,7 +83,7 @@ void CMap::mapping()
 		}
 	}
 
-	int num_c = 0;
+	int num_c = 0, num_m = 0;
 
 	if (num_c == 0) {
 		for (int y = 0; y < 50; y++) {
@@ -92,6 +92,24 @@ void CMap::mapping()
 					num_c += 1;
 					newMap[y][x] = 'P';
 				}
+			}
+		}
+	}
+
+	if (num_m == 0) {
+		for (int y = 25; y < 50; y++) {
+			if (newMap[y][70] == ' ' && num_m == 0) {
+				num_m += 1;
+				newMap[y][70] = 'M';
+			}
+		}
+	}
+
+	if (num_m == 0) {
+		for (int y = 25; y > 0; y--) {
+			if (newMap[y][70] == ' ' && num_m == 0) {
+				num_m += 1;
+				newMap[y][70] = 'M';
 			}
 		}
 	}
