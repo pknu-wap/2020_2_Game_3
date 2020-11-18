@@ -18,5 +18,5 @@ public:
 	~CMonster();
 
 public:
-	void Move(int x, int y);
+	void Move(int* m_PosX, int* m_PosY, int* playerX, int* playerY);
 };

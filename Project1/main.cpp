@@ -12,7 +12,6 @@ using namespace std;
 
 void LaunchManager();
 int Menu();
-int keycontrol();
 
 void GameManager();
 void Stage_1();
@@ -53,7 +52,7 @@ int Menu() {
 
 	//메뉴 선택
 	while (1) {
-		int n = keycontrol();
+		int n = cSystem.keycontrol();
 		switch (n) {
 		case UP: {
 			if (y > 15) {
@@ -84,31 +83,33 @@ int Menu() {
 }
 
 void Stage_1() {
-	int x, y, mx, my;
 	int on = 1;
+
 	CMonster monster;
 	CMap map1;
 	CCharacter player;
 	
+	map1.mapping();
+	map1.get_map();
 
 	while (on) {
-		int n = keycontrol();
+		int n = cSystem.keycontrol();
 		switch (n) {
 		case UP: {
-			Move(&x, &y, 0, -1);
-			monster.Move(x, y);
+			player.Move(&map1.c_x, &map1.c_y, 0, -1);
+			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case DOWN: {
-			Move(&x, &y, 0, 1);
-			monster.Move(x, y);
+			player.Move(&map1.c_x, &map1.c_y, 0, 1);
+			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case RIGHT: {
-			Move(&x, &y, 1, 0);
-			monster.Move(x, y);
+			player.Move(&map1.c_x, &map1.c_y, 1, 0);
+			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case LEFT: {
-			Move(&x, &y, -1, 0);
-			monster.Move(x, y);
+			player.Move(&map1.c_x, &map1.c_y, -1, 0);
+			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case SPACE:
 			on = 0;

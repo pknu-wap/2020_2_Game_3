@@ -2,7 +2,10 @@
 
 CMap::CMap()
 {
-
+	c_x = 10;
+	c_y = 10;
+	m_x = 10;
+	m_y = 10;
 }
 
 CMap::~CMap()

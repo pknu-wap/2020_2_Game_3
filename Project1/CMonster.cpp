@@ -13,62 +13,62 @@ CMonster::~CMonster()
 }
 
 
-void CMonster::Move(int playerX, int playerY)
-{
-	cSystem.gotoxy(m_PosX, m_PosY);
+void CMonster::Move(int* m_PosX, int* m_PosY, int* playerX, int* playerY)
+{;
+	cSystem.gotoxy(*m_PosX, *m_PosY);
 	std::cout << " ";
-	if (m_PosX > playerX) {
-		if (m_PosY > playerY) {
-			cSystem.gotoxy(m_PosX - 1, m_PosY - 1);
+	if (*m_PosX > *playerX) {
+		if (*m_PosY > *playerY) {
+			cSystem.gotoxy(*m_PosX - 1, *m_PosY - 1);
 			std::cout << "M";
-			m_PosX -= 1;
-			m_PosY -= 1;
+			*m_PosX -= 1;
+			*m_PosY -= 1;
 		}
-		else if (m_PosY == playerY) {
-			cSystem.gotoxy(m_PosX - 1, m_PosY);
+		else if (*m_PosY == *playerY) {
+			cSystem.gotoxy(*m_PosX - 1, *m_PosY);
 			std::cout << "M";
-			m_PosX -= 1;
+			*m_PosX -= 1;
 		}
 		else {
-			cSystem.gotoxy(m_PosX - 1, m_PosY + 1);
+			cSystem.gotoxy(*m_PosX - 1, *m_PosY + 1);
 			std::cout << "M";
-			m_PosX -= 1;
-			m_PosY += 1;
+			*m_PosX -= 1;
+			*m_PosY += 1;
 		}
 	}
-	else if (m_PosX == playerX) {
-		if (m_PosY > playerY) {
-			cSystem.gotoxy(m_PosX, m_PosY - 1);
+	else if (*m_PosX == *playerX) {
+		if (*m_PosY > *playerY) {
+			cSystem.gotoxy(*m_PosX, *m_PosY - 1);
 			std::cout << "M";
-			m_PosY -= 1;
+			*m_PosY -= 1;
 		}
-		else if (m_PosY == playerY) {
-			cSystem.gotoxy(m_PosX, m_PosY);
+		else if (*m_PosY == *playerY) {
+			cSystem.gotoxy(*m_PosX, *m_PosY);
 			std::cout << "M";
 		}
 		else {
-			cSystem.gotoxy(m_PosX, m_PosY + 1);
+			cSystem.gotoxy(*m_PosX, *m_PosY + 1);
 			std::cout << "M";
-			m_PosY += 1;
+			*m_PosY += 1;
 		}
 	}
 	else {
-		if (m_PosY > playerY) {
-			cSystem.gotoxy(m_PosX + 1, m_PosY - 1);
+		if (*m_PosY > *playerY) {
+			cSystem.gotoxy(*m_PosX + 1, *m_PosY - 1);
 			std::cout << "M";
-			m_PosX += 1;
-			m_PosY -= 1;
+			*m_PosX += 1;
+			*m_PosY -= 1;
 		}
-		else if (m_PosY == playerY) {
-			cSystem.gotoxy(m_PosX + 1, m_PosY);
+		else if (*m_PosY == *playerY) {
+			cSystem.gotoxy(*m_PosX + 1, *m_PosY);
 			std::cout << "M";
-			m_PosX += 1;
+			*m_PosX += 1;
 		}
 		else {
-			cSystem.gotoxy(m_PosX + 1, m_PosY + 1);
+			cSystem.gotoxy(*m_PosX + 1, *m_PosY + 1);
 			std::cout << "M";
-			m_PosX += 1;
-			m_PosY -= 1;
+			*m_PosX += 1;
+			*m_PosY -= 1;
 		}
 	}
 }
