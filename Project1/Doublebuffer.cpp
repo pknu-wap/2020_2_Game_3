@@ -34,12 +34,12 @@ void  Doublebuffer::CreateBuffer() {//버퍼 생성
 
 }
 
-void Doublebuffer::WriteBuffer(int x, int y, char str[])//백버퍼 그리기
+void Doublebuffer::WriteBuffer(int x, int y, std::string str)//백버퍼 그리기
 {
 	DWORD dw;
 	COORD CursorPosition = { x, y };
 	SetConsoleCursorPosition(hBuffer[nScreenIndex], CursorPosition);
-	WriteFile(hBuffer[nScreenIndex], str, strlen(str), &dw, NULL);
+	WriteFile(hBuffer[nScreenIndex], str.c_str(), str.size(), &dw, NULL);
 
 }
 void Doublebuffer::FlipBuffer()//버퍼 전환
