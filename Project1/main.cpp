@@ -96,19 +96,47 @@ void Stage_1() {
 		int n = cSystem.keycontrol();
 		switch (n) {
 		case UP: {
-			player.Move(&map1.c_x, &map1.c_y, 0, -1);
+			if (map1.newMap[map1.c_y - 1][map1.c_x] == '#')
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, 0);
+			}
+			else
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, -1);
+			}
 			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case DOWN: {
-			player.Move(&map1.c_x, &map1.c_y, 0, 1);
+			if (map1.newMap[map1.c_y + 1][map1.c_x] == '#')
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, 0);
+			}
+			else
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, 1);
+			}
 			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case RIGHT: {
-			player.Move(&map1.c_x, &map1.c_y, 1, 0);
+			if (map1.newMap[map1.c_y][map1.c_x + 1] == '#')
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, 0);
+			}
+			else
+			{
+				player.Move(&map1.c_x, &map1.c_y, 1, 0);
+			}
 			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case LEFT: {
-			player.Move(&map1.c_x, &map1.c_y, -1, 0);
+			if (map1.newMap[map1.c_y][map1.c_x - 1] == '#')
+			{
+				player.Move(&map1.c_x, &map1.c_y, 0, 0);
+			}
+			else
+			{
+				player.Move(&map1.c_x, &map1.c_y, -1, 0);
+			}
 			monster.Move(&map1.m_x, &map1.m_y, &map1.c_x, &map1.c_y);
 			break; }
 		case SPACE:
