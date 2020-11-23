@@ -143,6 +143,7 @@
     <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CSystem.cpp" />
+    <ClCompile Include="DoubleBuffer.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -155,6 +156,7 @@
     <ClInclude Include="CMap.h" />
     <ClInclude Include="CMonster.h" />
     <ClInclude Include="CSystem.h" />
+    <ClInclude Include="DoubleBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

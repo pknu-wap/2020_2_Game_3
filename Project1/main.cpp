@@ -1,11 +1,15 @@
 #include <iostream>
 #include <conio.h>
-#include <CoreWindow.h>
+#include <Windows.h>
+#include <sstream>
+#include <chrono>
+#include <cstdint>
 
 #include "CMap.h"
 #include "CMonster.h"
 #include "CSystem.h"
 #include "CCharacter.h"
+#include "DoubleBuffer.h"
 
 using namespace std;
 
@@ -29,9 +33,38 @@ void LaunchManager() {
 	cSystem.cursor(0);
 	Menu();
 }
+
 void GameManager() {
-	system("cls");
-	Stage_1();
+	const int fps = 30;
+
+	using frame = std::chrono::duration<int32_t, std::ratio<1, fps>>;
+	using ms = std::chrono::duration<float, std::milli>;
+
+	std::chrono::time_point<std::chrono::steady_clock> fpsTimer(std::chrono::steady_clock::now());
+
+	frame FPS{};
+
+	Doublebuffer doubleBuffer;
+	doubleBuffer.CreateBuffer();
+
+	while (true) {
+		FPS = std::chrono::duration_cast<frame>(std::chrono::steady_clock::now() - fpsTimer);
+
+		if (FPS.count() >= 1) {
+			fpsTimer = std::chrono::steady_clock::now();
+
+			std::stringstream ss("");
+			ss << FPS.count() * fps << " fps  " << std::chrono::duration_cast<ms>(FPS).count() << "ms";
+
+			doubleBuffer.WriteBuffer(0, 0, ss.str());
+
+			Stage_1();
+
+			doubleBuffer.FlipBuffer();
+			doubleBuffer.ClearBuffer();
+		}
+	}
+	
 	//스테이지1~5 실행
 }
 

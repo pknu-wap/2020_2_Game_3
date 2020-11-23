@@ -20,6 +20,9 @@
     <ClCompile Include="CCharacter.cpp">
       <Filter>object</Filter>
     </ClCompile>
+    <ClCompile Include="DoubleBuffer.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMonster.h">
@@ -32,6 +35,9 @@
       <Filter>object</Filter>
     </ClInclude>
     <ClInclude Include="CCharacter.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleBuffer.h">
       <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
