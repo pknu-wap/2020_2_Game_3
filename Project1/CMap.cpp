@@ -6,6 +6,8 @@ CMap::CMap()
 	c_y = 10;
 	m_x = 10;
 	m_y = 10;
+	mapping();
+	get_map();
 }
 
 CMap::~CMap()

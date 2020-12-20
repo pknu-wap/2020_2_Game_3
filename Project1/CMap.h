@@ -15,3 +15,4 @@ public:
 	void mapping();
 	void get_map();
 };
+
