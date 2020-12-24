@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <conio.h>
-#include <CoreWindow.h>
+#include <Windows.h>
 
 #include "CSystem.h"
 
@@ -16,7 +16,5 @@ public:
 	
 	int		c_PosX;
 	int		c_PosY;
-public:
-	void Move(int*, int*, int, int);
 };
 

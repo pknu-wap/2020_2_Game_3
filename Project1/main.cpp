@@ -5,7 +5,6 @@
 #include <chrono>
 #include <cstdint>
 
-#include "CMap.h"
 #include "CMonster.h"
 #include "CSystem.h"
 #include "CCharacter.h"
@@ -15,10 +14,24 @@ using namespace std;
 
 
 void LaunchManager();
-int Menu();
+
+void Stage_1(Doublebuffer& db);
+void mapping(Doublebuffer& db);
+void DrawMap(Doublebuffer& db);
 
 void GameManager();
-void Stage_1();
+
+
+enum GAMESTATE {
+	GAMEMENU,
+	GAMEMAIN,
+	GAMEEND
+};
+
+GAMESTATE state = GAMESTATE::GAMEMENU;
+CCharacter player;
+CMonster monster;
+static bool map[30][70];
 
 
 int main() {
@@ -28,14 +41,78 @@ int main() {
 	return 0;
 }
 
+void Render(Doublebuffer& db) {
+	switch (state) {
+	case GAMESTATE::GAMEMENU:
+		// 렌더링, writeBuffer, 맵 그리기
+		// WriteBuffer(x좌표, y좌표, 그릴 문자열);
+		// 메뉴 렌더링
+		db.WriteBuffer(0, 1, "GAMEMENU");
+		mapping(db);
+		break;
+	case GAMESTATE::GAMEMAIN:
+		db.WriteBuffer(0, 1, "GAMEMAIN");
+		// 스테이지 렌더링
+		db.WriteBuffer(0, 30, "Stage 1");
+		//맵그리기
+		DrawMap(db);
+		db.WriteBuffer(player.c_PosX, player.c_PosY, "P");
+		db.WriteBuffer(monster.m_PosX, monster.m_PosY, "M");
+
+
+		break;
+	case GAMESTATE::GAMEEND:
+		db.WriteBuffer(0, 1, "GAMEEND");
+
+		// 게임오버 됐을 때 렌더링
+		break;
+	}
+}
+
+void Update(Doublebuffer& db)
+{
+	bool w = (GetAsyncKeyState(0x57) & 0x8000);
+	bool s = (GetAsyncKeyState(0x53) & 0x8000);
+	bool a = (GetAsyncKeyState(0x41) & 0x8000);
+	bool d = (GetAsyncKeyState(0x44) & 0x8000);
+	bool space = (GetAsyncKeyState(0x20) & 0x8000);
+
+	// 로직 처리
+	// 입력 또는 충돌처리
+	switch (state) {
+	case GAMESTATE::GAMEMENU:
+		db.WriteBuffer(30, 15, "  게임 시작");
+		db.WriteBuffer(30, 16, "  게임 종료");
+		if (w == true) {
+			db.WriteBuffer(30, 15, ">");
+		}
+		else if (s == true) {
+			db.WriteBuffer(30, 16, ">");
+		}
+		if (space == true) {
+			state = GAMEMAIN;
+		}
+		break;
+	case GAMESTATE::GAMEMAIN:
+		//플레이어 이동
+		if (w == true && map[player.c_PosY - 1][player.c_PosX] == true) player.c_PosY -= 1;
+		else if (s == true && map[player.c_PosY + 1][player.c_PosX] == true) player.c_PosY += 1;
+		else if (a == true && map[player.c_PosY][player.c_PosX - 1] == true) player.c_PosX -= 1;
+		else if (d == true && map[player.c_PosY][player.c_PosX + 1] == true) player.c_PosX += 1;
+		
+		break;
+	case GAMESTATE::GAMEEND:
+		break;
+	}
+}
+
 void LaunchManager() {
-	system("mode con cols=70 lines=30 | title 제목");//최대범위 가로100 세로30
+	system("mode con cols=71 lines=36 | title 제목");//최대범위 가로100 세로30
 	cSystem.cursor(0);
-	Menu();
 }
 
 void GameManager() {
-	const int fps = 30;
+	const int fps = 120;
 
 	using frame = std::chrono::duration<int32_t, std::ratio<1, fps>>;
 	using ms = std::chrono::duration<float, std::milli>;
@@ -56,125 +133,99 @@ void GameManager() {
 			std::stringstream ss("");
 			ss << FPS.count() * fps << " fps  " << std::chrono::duration_cast<ms>(FPS).count() << "ms";
 
-			doubleBuffer.WriteBuffer(0, 0, ss.str());
+			// Render 상태 패턴
 
-			Stage_1();
+			doubleBuffer.WriteBuffer(0, 0, ss.str());
+			Render(doubleBuffer);
+			Update(doubleBuffer);
+
+			// -----
 
 			doubleBuffer.FlipBuffer();
 			doubleBuffer.ClearBuffer();
 		}
 	}
-	
+
 	//스테이지1~5 실행
 }
 
-int Menu() {
-	//메뉴 출력
-	cout << "\n\n\n\n";
-	cout << " 제목을 뭘로 하지...\n";
+void mapping(Doublebuffer& db)
+{
+	srand(time(NULL));
+	int SetMap = 450;
 
-	int x = 30, y = 15;
-	cSystem.gotoxy(x - 2, y);
-	cout << "> 게임 시작";
-	cSystem.gotoxy(x, y + 1);
-	cout << "기록 보기";
-	cSystem.gotoxy(x, y + 2);
-	cout << "게임 종료";
-	cSystem.gotoxy(x - 20, y + 4);
-	cout << "w,s를 통해 상하 이동을 하고, 스페이스바로 선택합니다!!\n";
-
-	//메뉴 선택
-	while (1) {
-		int n = cSystem.keycontrol();
-		switch (n) {
-		case UP: {
-			if (y > 15) {
-				cSystem.gotoxy(x - 2, y);
-				cout << " ";
-				cSystem.gotoxy(x - 2, --y);
-				cout << ">";
+	for (int y = 0; y < 30; y++) {
+		for (int x = 0; x < 70; x++) {
+			if (rand() % 1000 < SetMap) {
+				map[y][x] = true;
 			}
-			break;
-		}
-		case DOWN: {
-			if (y < 17) {
-				cSystem.gotoxy(x - 2, y);
-				cout << " ";
-				cSystem.gotoxy(x - 2, ++y);
-				cout << ">";
+			else {
+				map[y][x] = false;
 			}
-			break;
-		}
-		case SPACE: {
-			if (y == 15) return 0;
-			//if (y == 16) GameRecord();
-			if (y == 17) system("exit");
-			break;
-		}
 		}
 	}
-}
+	bool temp_map[30][70];
 
-void Stage_1() {
-	int on = 1;
+	for (int k = 0; k < 3; k++) {
+		for (int y = 0; y < 30; y++) {
+			for (int x = 0; x < 70; x++) {
+				int count = 0;
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						int nx = x + i;
+						int ny = y + j;
 
-	CMonster monster;
-	//CMap map1;
-	CCharacter player;
+						if (i == 0 && j == 0) {
+							//카운트하지 않음
+						}
+
+						else if (nx < 0 || ny < 0 || nx >= 70 || ny >= 30) {
+							count = count + 1;
+						}
+
+						else if (map[ny][nx] != true) {
+							count = count + 1;
+						}
+					}
+				}
+				if (count < 5) {
+					temp_map[y][x] = true;
+				}
+				else {
+					temp_map[y][x] = false;
+				}
+			}
+		}
+
+		for (int y = 0; y < 30; y++) {
+			for (int x = 0; x < 70; x++) {
+				map[y][x] = temp_map[y][x];
+			}
+		}
+	}
+	//출력
 	
-	//map1.mapping();
-	//map1.get_map();
+}
 
-	while (on) {
-		int n = cSystem.keycontrol();
-		switch (n) {
-		case UP: {
-			if (monster.map1.newMap[monster.map1.c_y - 1][monster.map1.c_x] == '#')
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, 0);
+void DrawMap(Doublebuffer& db)
+{
+	//맵출력
+	for (int y = 0; y < 30; y++) {
+		for (int x = 0; x < 70; x++) {
+			if (x == 0 || y == 0 || x == 69 || y == 29) {
+				db.WriteBuffer(x, y, "#");
 			}
-			else
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, -1);
+			else if (map[y][x] == true) {
+				db.WriteBuffer(x, y, " ");
 			}
-			monster.Move(&monster.map1.m_x, &monster.map1.m_y, &monster.map1.c_x, &monster.map1.c_y);
-			break; }
-		case DOWN: {
-			if (monster.map1.newMap[monster.map1.c_y + 1][monster.map1.c_x] == '#')
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, 0);
+			else {
+				db.WriteBuffer(x, y, "#");
 			}
-			else
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, 1);
-			}
-			monster.Move(&monster.map1.m_x, &monster.map1.m_y, &monster.map1.c_x, &monster.map1.c_y);
-			break; }
-		case RIGHT: {
-			if (monster.map1.newMap[monster.map1.c_y][monster.map1.c_x + 1] == '#')
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, 0);
-			}
-			else
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 1, 0);
-			}
-			monster.Move(&monster.map1.m_x, &monster.map1.m_y, &monster.map1.c_x, &monster.map1.c_y);
-			break; }
-		case LEFT: {
-			if (monster.map1.newMap[monster.map1.c_y][monster.map1.c_x - 1] == '#')
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, 0, 0);
-			}
-			else
-			{
-				player.Move(&monster.map1.c_x, &monster.map1.c_y, -1, 0);
-			}
-			monster.Move(&monster.map1.m_x, &monster.map1.m_y, &monster.map1.c_x, &monster.map1.c_y);
-			break; }
-		case SPACE:
-			on = 0;
 		}
 	}
 }
 
+void Stage_1(Doublebuffer& db)
+{
+
+}

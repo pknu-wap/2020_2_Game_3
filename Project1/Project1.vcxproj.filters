@@ -7,13 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="CMonster.cpp">
-      <Filter>object</Filter>
-    </ClCompile>
     <ClCompile Include="CSystem.cpp">
-      <Filter>object</Filter>
-    </ClCompile>
-    <ClCompile Include="CMap.cpp">
       <Filter>object</Filter>
     </ClCompile>
     <ClCompile Include="소스.cpp" />
@@ -23,21 +17,21 @@
     <ClCompile Include="DoubleBuffer.cpp">
       <Filter>object</Filter>
     </ClCompile>
+    <ClCompile Include="CMonster.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CMonster.h">
-      <Filter>object</Filter>
-    </ClInclude>
     <ClInclude Include="CSystem.h">
-      <Filter>object</Filter>
-    </ClInclude>
-    <ClInclude Include="CMap.h">
       <Filter>object</Filter>
     </ClInclude>
     <ClInclude Include="CCharacter.h">
       <Filter>object</Filter>
     </ClInclude>
     <ClInclude Include="DoubleBuffer.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonster.h">
       <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
