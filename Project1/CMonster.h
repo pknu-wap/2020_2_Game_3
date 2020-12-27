@@ -2,6 +2,9 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
+#include <iostream>
+#include <cmath>
+#define M_PI 3.14159265358979323846
 
 #include "CSystem.h"
 
@@ -14,6 +17,9 @@ public:
 	int		m_PosY;
 
 public:
-	CMonster();
+	CMonster(int posx, int posy, int hp);
 	~CMonster();
+
+public:
+	void Detect(int px, int py, int mx, int my);
 };

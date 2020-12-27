@@ -13,7 +13,8 @@ public:
 
 public:
 	int		c_Hp;
-	
+	int		c_Pp;
+
 	int		c_PosX;
 	int		c_PosY;
 };
