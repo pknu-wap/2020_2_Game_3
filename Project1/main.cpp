@@ -121,23 +121,23 @@ void Update(Doublebuffer& db)
 		}
 
 		//몬스터1 이동
-		if (player.c_PosX > monster1.m_PosX && map[monster1.m_PosY - 1][monster1.m_PosX] == true)
+		if (player.c_PosX > monster1.m_PosX && map[monster1.m_PosY][monster1.m_PosX + 1] == true)
 		{
 			monster1.m_PosX += 1;
-			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX + 1] == true)	monster1.m_PosY += 1;
-			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX - 1] == true) monster1.m_PosY -= 1;
+			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY + 1][monster1.m_PosX] == true)	monster1.m_PosY += 1;
+			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY - 1][monster1.m_PosX] == true) monster1.m_PosY -= 1;
 		}
 		else if (player.c_PosX == monster1.m_PosX)
 		{
 			monster1.m_PosX = monster1.m_PosX;
-			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX + 1] == true)	monster1.m_PosY += 1;
-			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX - 1] == true) monster1.m_PosY -= 1;
+			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY + 1][monster1.m_PosX] == true)	monster1.m_PosY += 1;
+			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY - 1][monster1.m_PosX] == true) monster1.m_PosY -= 1;
 		}
-		else if (player.c_PosX < monster1.m_PosX && map[monster1.m_PosY + 1][monster1.m_PosX] == true)
+		else if (player.c_PosX < monster1.m_PosX && map[monster1.m_PosY][monster1.m_PosX - 1] == true)
 		{
 			monster1.m_PosX -= 1;
-			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX + 1] == true)	monster1.m_PosY += 1;
-			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY][monster1.m_PosX - 1] == true) monster1.m_PosY -= 1;
+			if (player.c_PosY > monster1.m_PosY && map[monster1.m_PosY + 1][monster1.m_PosX] == true)	monster1.m_PosY += 1;
+			else if (player.c_PosY < monster1.m_PosY && map[monster1.m_PosY - 1][monster1.m_PosX] == true) monster1.m_PosY -= 1;
 		}
 		
 		if (player.c_PosX == monster1.m_PosX && player.c_PosY == monster1.m_PosY)	state = BATTLE;
@@ -145,23 +145,23 @@ void Update(Doublebuffer& db)
 
 		//몬스터2 이동
 		
-		if (player.c_PosX > monster2.m_PosX && map[monster2.m_PosY - 1][monster2.m_PosX] == true)
+		if (player.c_PosX > monster2.m_PosX && map[monster2.m_PosY][monster2.m_PosX + 1] == true)
 		{
 			monster2.m_PosX += 1;
-			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX + 1] == true)	monster2.m_PosY += 1;
-			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX - 1] == true) monster2.m_PosY -= 1;
+			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY + 1][monster2.m_PosX] == true)	monster2.m_PosY += 1;
+			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY - 1][monster2.m_PosX] == true) monster2.m_PosY -= 1;
 		}
 		else if (player.c_PosX == monster2.m_PosX)
 		{
 			monster2.m_PosX = monster2.m_PosX;
-			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX + 1] == true)	monster2.m_PosY += 1;
-			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX - 1] == true) monster2.m_PosY -= 1;
+			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY + 1][monster2.m_PosX] == true)	monster2.m_PosY += 1;
+			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY - 1][monster2.m_PosX] == true) monster2.m_PosY -= 1;
 		}
-		else if (player.c_PosX < monster2.m_PosX && map[monster2.m_PosY + 1][monster2.m_PosX] == true)
+		else if (player.c_PosX < monster2.m_PosX && map[monster2.m_PosY][monster2.m_PosX - 1] == true)
 		{
 			monster2.m_PosX -= 1;
-			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX + 1] == true)	monster2.m_PosY += 1;
-			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY][monster2.m_PosX - 1] == true) monster2.m_PosY -= 1;
+			if (player.c_PosY > monster2.m_PosY && map[monster2.m_PosY + 1][monster2.m_PosX] == true)	monster2.m_PosY += 1;
+			else if (player.c_PosY < monster2.m_PosY && map[monster2.m_PosY - 1][monster2.m_PosX] == true) monster2.m_PosY -= 1;
 		}
 
 		if (player.c_PosX == monster2.m_PosX && player.c_PosY == monster2.m_PosY)	state = BATTLE;
